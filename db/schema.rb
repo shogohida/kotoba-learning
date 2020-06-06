@@ -10,10 +10,34 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_06_151745) do
+ActiveRecord::Schema.define(version: 2020_06_06_153733) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "conversations", force: :cascade do |t|
+    t.bigint "english_id", null: false
+    t.string "chat"
+    t.string "skype"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["english_id"], name: "index_conversations_on_english_id"
+  end
+
+  create_table "englishes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_englishes_on_user_id"
+  end
+
+  create_table "grammers", force: :cascade do |t|
+    t.bigint "english_id", null: false
+    t.string "type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["english_id"], name: "index_grammers_on_english_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -27,4 +51,20 @@ ActiveRecord::Schema.define(version: 2020_06_06_151745) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "words", force: :cascade do |t|
+    t.bigint "english_id", null: false
+    t.string "name"
+    t.integer "length"
+    t.string "difficulty"
+    t.string "meaning"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "pronunciation"
+    t.index ["english_id"], name: "index_words_on_english_id"
+  end
+
+  add_foreign_key "conversations", "englishes"
+  add_foreign_key "englishes", "users"
+  add_foreign_key "grammers", "englishes"
+  add_foreign_key "words", "englishes"
 end
